@@ -1,0 +1,14 @@
+generated: '2026-07-21'
+method: searched
+source: https://storytap.com/
+status_page: https://ohdear.app/status-page/storytap-app-status
+versioning: {}
+deprecation: {}
+sla: {}
+deprecated_operations: []
+notes: >-
+  StoryTap runs a public Oh Dear status page for its application
+  (app.storytap.com). No public API versioning policy, deprecation policy, or
+  SLA is published — the StoryTap API is offered only on Enterprise plans and is
+  not publicly documented, so lifecycle governance beyond the status page could
+  not be verified.

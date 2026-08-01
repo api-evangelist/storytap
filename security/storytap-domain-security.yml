@@ -1,0 +1,22 @@
+generated: '2026-07-21'
+method: probed
+source: live DNS/TLS/HTTP probes of apis.yml + OpenAPI hosts
+hosts:
+- host: storytap.com
+  https: true
+  tls_version: TLSv1.3
+  cert_expires: Sep 23 21:06:44 2026 GMT
+  hsts: false
+domains:
+- domain: storytap.com
+  dnssec: false
+  caa:
+  - 0 issue "comodoca.com"
+  - 0 issue "digicert.com"
+  - 0 issuewild "comodoca.com"
+  - 0 issue "letsencrypt.org"
+  - 0 issuewild "letsencrypt.org"
+  - 0 issuewild "digicert.com"
+  spf: true
+  dmarc: true
+  dmarc_policy: none

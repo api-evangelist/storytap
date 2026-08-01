@@ -1,7 +1,27 @@
 aid: storytap
+accessModel:
+  pricing: unknown
+  onboarding: unknown
+  trial: false
+  try_now: false
+  public: false
+  label: Unknown
+  confidence: low
+  source: []
+  generated: '2026-07-22'
+  method: derived
+image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/storytap.png
 name: StoryTap
-description: StoryTap is a company surfaced as a portfolio company of techstars and added to the API Evangelist
-  network as a stub for enrichment. This profile is a lead awaiting the enrichment pipeline.
+description: >-
+  StoryTap is a patented AI-powered user-generated video (UGC) platform that
+  automates the collection, editing, captioning, and distribution of authentic
+  customer video testimonials and stories. It guides customers through recording
+  on their own devices with no film crew or production stack, auto-edits
+  share-ready clips, and publishes them to websites, social media, and Google
+  Reviews. StoryTap holds six utility patents and is used by brands including
+  TELUS, Samsung, Danone, Canadian Tire, AAA, and UCLA Anderson. A REST API and
+  advanced webhooks are offered on Enterprise plans (not publicly documented).
+  StoryTap is backed by Techstars and the Lazaridis Institute.
 url: https://raw.githubusercontent.com/api-evangelist/storytap/refs/heads/main/apis.yml
 x-type: company
 x-source: vc-portfolio
@@ -11,9 +31,16 @@ x-tier: stub
 x-tier-reason: portfolio-lead
 specificationVersion: '0.20'
 created: '2026-07-17'
-modified: '2026-07-17'
+modified: '2026-07-21'
 tags:
 - Company
+- Video
+- Testimonials
+- User Generated Content
+- Marketing
+- Reviews
+- Video Testimonials
+- SaaS
 apis: []
 maintainers:
 - FN: Kin Lane
@@ -23,3 +50,36 @@ maintainers:
 common:
 - type: Website
   url: https://storytap.com/
+- type: Enterprise
+  url: https://storytap.com/enterprise-video-solution/
+- type: Blog
+  url: https://storytap.com/blog/
+- type: Pricing
+  url: https://storytap.com/pricing/
+- type: SignUp
+  url: https://app.storytap.com/signup
+- type: Login
+  url: https://app.storytap.com/login
+- type: Support
+  url: https://storytap.com/demo/
+- type: TermsOfService
+  url: https://storytap.com/terms
+- type: PrivacyPolicy
+  url: https://storytap.com/terms#privacy
+- type: StatusPage
+  url: https://ohdear.app/status-page/storytap-app-status
+- type: Security
+  url: https://storytap.com/responsible-disclosure-policy
+- type: Lifecycle
+  url: lifecycle/storytap-lifecycle.yml
+- type: VulnerabilityDisclosure
+  url: security/storytap-vulnerability-disclosure.yml
+- type: DomainSecurity
+  url: security/storytap-domain-security.yml
+- type: LLMsTxt
+  url: llms/storytap-llms.txt
+x-enrichment:
+  date: '2026-07-21'
+  status: minimal
+  artifacts_added: 5
+  pass: local-v1

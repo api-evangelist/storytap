@@ -1,0 +1,34 @@
+# StoryTap
+
+> StoryTap is a patented AI-powered user-generated video (UGC) platform that automates the collection, editing, captioning, and distribution of authentic customer video testimonials and stories. It guides customers through recording on their own devices — no film crew required — and auto-edits share-ready clips for websites, social media, and Google Reviews. A REST API and advanced webhooks are available on Enterprise plans (not publicly documented). Backed by Techstars and the Lazaridis Institute.
+
+## Company
+- [Website](https://storytap.com/): StoryTap marketing site
+- [UGC Video Platform](https://storytap.com/ugc-video-platform/): Patented platform overview
+- [Enterprise](https://storytap.com/enterprise-video-solution/): Enterprise video solution (API + advanced webhooks)
+- [About](https://storytap.com/about/): Company background
+- [Patents](https://storytap.com/patents/): Six utility patents
+
+## Product
+- [Google Reviews Video](https://storytap.com/ugc-video-platform/google-reviews/): Share videos as Google Reviews
+- [Video Player & GEO](https://storytap.com/video-player-and-geo/): Hosted video player
+- [Video SEO](https://storytap.com/ugc-video-platform/video-seo/): Captioning and search optimization
+- [Platform Comparison](https://storytap.com/platform-comparison/): Testimonial platform comparison
+
+## Get Started
+- [Sign Up](https://app.storytap.com/signup): Create an account (first 3 videos free, no credit card)
+- [Login](https://app.storytap.com/login): Application login
+- [Pricing](https://storytap.com/pricing/): Plans and pricing
+- [Book a Demo](https://storytap.com/demo/): Request a demo / contact sales
+
+## Resources
+- [Blog](https://storytap.com/blog/): Articles on video testimonials
+- [Guide to Video Testimonials](https://storytap.com/guide-to-video-testimonials/): How-to guide
+- [Case Studies](https://storytap.com/case-studies/): Customer stories
+- [FAQ](https://storytap.com/frequently-asked-questions/): Frequently asked questions
+
+## Legal & Security
+- [Terms of Service](https://storytap.com/terms): Terms of service
+- [Privacy Policy](https://storytap.com/terms#privacy): Privacy policy
+- [Responsible Disclosure Policy](https://storytap.com/responsible-disclosure-policy): Report vulnerabilities to security@storytap.com
+- [Status Page](https://ohdear.app/status-page/storytap-app-status): Application status

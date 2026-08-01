@@ -1,0 +1,32 @@
+generated: '2026-07-21'
+method: searched
+source: live probes of /.well-known/ on StoryTap hosts
+hosts:
+- host: https://storytap.com
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+- host: https://app.storytap.com
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+notes: >-
+  No /.well-known/ discovery documents are published on either the marketing
+  (storytap.com) or application (app.storytap.com) host. Absence is a valid
+  recorded result; no raw files were saved.
