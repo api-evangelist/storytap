@@ -31,7 +31,7 @@ x-tier: stub
 x-tier-reason: portfolio-lead
 specificationVersion: '0.20'
 created: '2026-07-17'
-modified: '2026-07-21'
+modified: '2026-08-13'
 tags:
 - Company
 - Video
@@ -41,7 +41,40 @@ tags:
 - Reviews
 - Video Testimonials
 - SaaS
-apis: []
+apis:
+- name: StoryTap Video Widget API
+  description: >-
+    The JSON API behind StoryTap's embeddable video widgets. Brands load a
+    first-party loader script from StoryTap's CDN, and that script POSTs to
+    api.storytap.com/w/* to fetch an embed's configuration and video/Q&A payload,
+    submit visitor questions and video feedback, and flush a batched client event
+    queue. Requests carry a public per-embed key and embed id in the JSON body.
+    This surface is UNDOCUMENTED — StoryTap publishes no developer portal,
+    reference or machine-readable spec for it; it was discovered in StoryTap's own
+    public embed script and confirmed live by probe on 2026-08-13. StoryTap also
+    markets a REST API and advanced webhooks on Enterprise plans, evidenced
+    publicly only through its own Zapier app (campaigns, brands, invites, events);
+    no base URL is published for that surface, so it is recorded in
+    integrations/storytap-integrations.yml rather than claimed here.
+  humanURL: https://storytap.com/video-player-and-geo/
+  baseURL: https://api.storytap.com
+  tags:
+  - Video
+  - User Generated Content
+  - Testimonials
+  - Widgets
+  - Embeds
+  properties:
+  - type: Components
+    url: components/storytap-components.yml
+  - type: Conventions
+    url: conventions/storytap-conventions.yml
+  - type: ErrorCatalog
+    url: errors/storytap-problem-types.yml
+  - type: RateLimits
+    url: rate-limits/storytap-rate-limits.yml
+  x-status: undocumented
+  x-discovery: https://cdn1aws.storytap.com/storytap-videos-2.js
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
@@ -56,8 +89,6 @@ common:
   url: https://storytap.com/blog/
 - type: Pricing
   url: https://storytap.com/pricing/
-- type: SignUp
-  url: https://app.storytap.com/signup
 - type: Login
   url: https://app.storytap.com/login
 - type: Support
@@ -78,8 +109,34 @@ common:
   url: security/storytap-domain-security.yml
 - type: LLMsTxt
   url: llms/storytap-llms.txt
+- type: Authentication
+  url: authentication/storytap-authentication.yml
+- type: Packages
+  url: packages/storytap-packages.yml
+- type: Components
+  url: components/storytap-components.yml
+- type: Conventions
+  url: conventions/storytap-conventions.yml
+- type: ErrorCatalog
+  url: errors/storytap-problem-types.yml
+- type: RateLimits
+  url: rate-limits/storytap-rate-limits.yml
+- type: Plans
+  url: plans/storytap-plans-pricing.yml
+- type: Conformance
+  url: conformance/storytap-conformance.yml
+- type: Compliance
+  url: conformance/storytap-conformance.yml
+- type: Webhooks
+  url: asyncapi/storytap-webhooks.yml
+- type: Integrations
+  url: integrations/storytap-integrations.yml
+- type: MCPServer
+  url: mcp/storytap-mcp.yml
+- type: Contact
+  url: https://storytap.com/contact/
 x-enrichment:
-  date: '2026-07-21'
-  status: minimal
-  artifacts_added: 5
+  date: '2026-08-13'
+  status: enriched
+  artifacts_added: 11
   pass: local-v1
