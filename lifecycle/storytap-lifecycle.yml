@@ -1,14 +1,74 @@
-generated: '2026-07-21'
+generated: '2026-08-13'
 method: searched
-source: https://storytap.com/
+source: >-
+  https://storytap.com/, https://storytap.com/enterprise-video-solution/,
+  https://zapier.com/apps/storytap/integrations, plus live probes of
+  api.storytap.com and app.storytap.com
 status_page: https://ohdear.app/status-page/storytap-app-status
-versioning: {}
-deprecation: {}
-sla: {}
+status_page_status: 200
+status_page_note: >-
+  Public Oh Dear status page covering the StoryTap application (app.storytap.com).
+  It is a third-party hosted page, not on a StoryTap domain, and it does not cover
+  the API host (api.storytap.com) as a separate component.
+versioning:
+  policy_published: false
+  scheme: none
+  in_url: false
+  in_header: false
+  observed_version_markers:
+    - {marker: storytap-videos-2.js, kind: CDN asset generation suffix, note: Not a semantic version; the URL is unpinned and floats to latest.}
+    - {marker: StoryTapCLIAPI@1.6.1, kind: Zapier CLI app build, source: 'https://zapier.com/apps/storytap/integrations', note: Versions StoryTap''s Zapier integration, not the API itself.}
+  note: >-
+    The widget API paths are unversioned (/w/<operation>) and no version header is
+    sent or returned. A consumer has no way to pin behavior.
+deprecation:
+  policy_published: false
+  sunset_header: false
+  deprecation_header: false
+  rfc8594: false
+sla:
+  published: false
+  note: No uptime commitment, support-response target or credit schedule is published.
+changelog:
+  published: false
+  note: >-
+    No product or API changelog. Product news appears only as marketing blog
+    posts at https://storytap.com/blog/ (most recent 2026-06-19), with no
+    versioned or dated release notes.
 deprecated_operations: []
+observed_lifecycle_changes:
+  - change: Self-serve signup has been retired
+    evidence:
+      - {url: 'https://app.storytap.com/signup', status: 200, final_url: 'https://app.storytap.com/oops?msg=no-brand'}
+      - {url: 'https://app.storytap.com/register', status: 404}
+      - {url: 'https://app.storytap.com/free-trial', status: 404}
+    note: >-
+      Signup is now brand-scoped with no public entry point; the generic signup
+      URL lands on an error page. The apis.yml SignUp pointer was removed on
+      2026-08-13 because it no longer resolves to a usable page. Login
+      (https://app.storytap.com/login) still works.
+  - change: Pricing page put behind a password
+    evidence:
+      - {url: 'https://storytap.com/pricing/', status: 200, note: WordPress password gate, no pricing content}
+    note: >-
+      Also dropped from https://storytap.com/page-sitemap.xml while remaining
+      linked in the site footer. StoryTap has moved fully to a demo/sales motion.
+      See plans/storytap-plans-pricing.yml.
+api_surface_status:
+  documented: false
+  reachable: true
+  note: >-
+    StoryTap positions a REST API and "advanced webhooks" as Enterprise features
+    but publishes no developer portal, reference, spec or changelog for them. The
+    widget API at api.storytap.com is live and callable (probed 200) but is
+    undocumented and unversioned. The authenticated platform API is evidenced
+    only through StoryTap's own Zapier app. See
+    integrations/storytap-integrations.yml and asyncapi/storytap-webhooks.yml.
 notes: >-
-  StoryTap runs a public Oh Dear status page for its application
-  (app.storytap.com). No public API versioning policy, deprecation policy, or
-  SLA is published — the StoryTap API is offered only on Enterprise plans and is
-  not publicly documented, so lifecycle governance beyond the status page could
-  not be verified.
+  Lifecycle governance is limited to a third-party status page. There is no
+  versioning policy, no deprecation policy, no Sunset/Deprecation header support,
+  no SLA, and no changelog for either the product or the API. The two lifecycle
+  events observable from outside in this pass both narrow public access:
+  self-serve signup is gone and pricing is password-protected.
+x-evidence:
+  fetched: '2026-08-13'

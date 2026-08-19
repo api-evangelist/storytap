@@ -1,0 +1,42 @@
+generated: '2026-08-13'
+method: searched
+source: >-
+  Registry searches of npm, PyPI, RubyGems, Packagist, plus GitHub org/repo
+  search and StoryTap's own site; CDN loader read from storytap.com page source.
+summary: >-
+  StoryTap publishes no server-side client libraries in any package registry.
+  The only first-party distributable is the CDN-hosted browser embed loader,
+  which has no registry entry and no version in its URL. Recorded as an honest
+  zero-SDK finding: no `SDKs` pointer is emitted, because there is no SDK.
+packages:
+  - name: storytap-videos-2.js
+    language: javascript
+    registry: cdn
+    url: https://cdn1aws.storytap.com/storytap-videos-2.js
+    version: null
+    published: null
+    official: true
+    note: >-
+      Browser embed loader for StoryTap video widgets. CDN-distributed, so there
+      is no registry metadata endpoint to query; the URL is unpinned (no version
+      segment or content hash) and floats to the latest build, so neither a
+      consumer nor this pipeline can determine which version is being served.
+      Not mirrored on npm, unpkg or jsDelivr. HTTP 200, 227,682 bytes on
+      2026-08-13. Catalogued in detail in components/storytap-components.yml.
+registries_checked:
+  - {registry: npm, query: storytap, result: 0 packages, url: 'https://registry.npmjs.org/-/v1/search?text=storytap', status: 200}
+  - {registry: npm, query: 'storytap (exact name)', result: not found, url: 'https://registry.npmjs.org/storytap', status: 404}
+  - {registry: pypi, query: storytap, result: not found, url: 'https://pypi.org/pypi/storytap/json', status: 404}
+  - {registry: rubygems, query: storytap, result: 0 gems, url: 'https://rubygems.org/api/v1/search.json?query=storytap', status: 200}
+  - {registry: packagist, query: storytap, result: 0 first-party packages, url: 'https://packagist.org/search.json?q=storytap', status: 200}
+  - {registry: github, query: storytap, result: 'no StoryTap-owned org or repo; github.com/storytap does not exist', url: 'https://api.github.com/orgs/storytap', status: 404}
+excluded:
+  - name: SEMAdevelopment/storytap-api
+    url: https://github.com/SEMAdevelopment/storytap-api
+    reason: >-
+      OWNERSHIP FAIL. A public GitHub repo literally titled "StoryTap API" exists
+      and is the top web-search result, but it belongs to SEMAdevelopment (an
+      Atlanta, GA development shop, semadevelopment.com), was created 2013-07-12
+      and last pushed 2013-12-05 — years before StoryTap Technologies Inc.
+      (Vancouver, BC) existed. It is a Rails application skeleton, not a client
+      library, and nothing ties it to this company. Not StoryTap's; not counted.

@@ -1,0 +1,92 @@
+generated: '2026-08-13'
+method: searched
+source: https://zapier.com/apps/storytap/integrations
+summary: >-
+  StoryTap's published integration surface. The native integrations are marketed
+  on storytap.com; the only one with a public, machine-readable operation list is
+  StoryTap's own Zapier app, whose published implementation
+  ("StoryTapCLIAPI@1.6.1") documents the triggers, actions and fields of the
+  authenticated StoryTap platform API. That listing is the best public evidence
+  that an Enterprise REST API and an event/webhook surface exist, and it is the
+  only place StoryTap names any operation.
+
+zapier:
+  app_slug: storytap
+  url: https://zapier.com/apps/storytap/integrations
+  http_status: 200
+  zapier_app_id: 83d7ee73-5974-4d43-b9c8-76adf9a63315
+  zapier_legacy_id: 39975
+  partner_tier: BRONZE
+  premium: false
+  category: Video & Audio
+  implementation: StoryTapCLIAPI@1.6.1
+  implementation_note: >-
+    Zapier CLI app, i.e. StoryTap wrote and maintains it against their own API.
+    The version string 1.6.1 is the Zapier app build, not an API version.
+  triggers:
+    - key: new_event
+      label: New Event
+      hook: true
+      hidden: false
+      description: Triggers when a specified event occurs within StoryTap.
+      inputs:
+        - {key: events, label: Events, required: true, help: Select the StoryTap events that will trigger this Zap.}
+        - {key: parent_brand, label: Parent Brand (Optional), required: false, help: Select the Parent Brand to filter.}
+        - {key: co_brand, label: Co-Brand (Optional), required: false, help: Select the Co-Brand to filter.}
+      note: >-
+        `hook: true` means this is a subscription (webhook) trigger, not polling —
+        StoryTap pushes the event. The set of event names is populated from a
+        dynamic dropdown that requires an authenticated StoryTap account, so the
+        event catalog cannot be enumerated anonymously.
+  actions:
+    - key: add_invite
+      label: Add Invite
+      type: write
+      description: Adds a person to the invite list for a StoryTap email campaign.
+      inputs:
+        - {key: campaign_id, label: Campaign, required: true, help: Select the StoryTap email campaign to add the invitee to.}
+        - {key: name, label: Invitee Name, required: true}
+        - {key: email, label: Invitee Email Address, required: true}
+        - {key: product_skus, label: Invitee Product SKUs (Optional), required: false, help: 'Product SKU(s) this person will review; must match SKUs in StoryTap (app.storytap.com/administrator/products).'}
+        - {key: order_id, label: Order ID (Optional), required: false}
+  searches:
+    - {key: get_campaigns, label: Get Campaigns, hidden: true, description: Get Campaigns from your StoryTap account.}
+    - {key: get_parent_brand, label: Get Parent Brands, hidden: true, description: Get Parent Brands from your StoryTap account.}
+    - {key: co_brand, label: Get Co-Brands, hidden: true, description: Get Co-Brands from your StoryTap account.}
+  implied_resources:
+    - {resource: event, evidence: new_event trigger}
+    - {resource: campaign, evidence: get_campaigns + add_invite.campaign_id}
+    - {resource: invite, evidence: add_invite}
+    - {resource: parent_brand, evidence: get_parent_brand}
+    - {resource: co_brand, evidence: co_brand}
+    - {resource: product (SKU), evidence: add_invite.product_skus + app.storytap.com/administrator/products}
+  note: >-
+    These are the Zapier app's operations as StoryTap published them. The
+    underlying REST paths, base URL, auth scheme and payload schemas are NOT
+    disclosed on the listing and are not inferred here.
+
+native_integrations:
+  source: https://storytap.com/
+  note: Marketing-level integration tiles on the StoryTap homepage; no developer documentation behind any of them.
+  items:
+    - {name: Google, description: 'Allow customers to share videos as a Google Review for your business.'}
+    - {name: TikTok, description: 'Easily share your UGC videos straight to your TikTok channel.'}
+    - {name: CapCut, description: 'Select your favorite StoryTap videos and edit them in CapCut.'}
+    - {name: Shopify, description: 'Automatically invite shoppers to record a video review after a purchase.'}
+    - {name: Canva, description: 'Select your favorite StoryTap videos and edit them in Canva.'}
+    - {name: Webhooks, description: 'Connect your system to StoryTap to create powerful automations.'}
+    - {name: YouTube, description: 'Syndicate your UGC videos to YouTube and sync statistics.', terms: 'Governed by the YouTube API Services terms per https://storytap.com/terms/'}
+    - {name: Google Analytics, description: 'Connect your GA4 analytics to view detailed video reports.'}
+
+embedding_targets:
+  - name: Shopify storefront + admin
+    evidence: >-
+      api.storytap.com serves `frame-ancestors *.myshopify.com admin.shopify.com
+      *.storytap.com`, so StoryTap widgets are explicitly permitted to frame
+      inside Shopify.
+
+x-evidence:
+  fetched: '2026-08-13'
+  probes:
+    - {url: 'https://zapier.com/apps/storytap/integrations', status: 200}
+    - {url: 'https://storytap.com/', status: 200}

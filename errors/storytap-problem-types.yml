@@ -1,0 +1,56 @@
+generated: '2026-08-13'
+method: probed
+source: >-
+  Live POST probes of https://api.storytap.com/w/* with an empty JSON body,
+  2026-08-13. StoryTap publishes no error reference to enrich these from.
+format: proprietary
+rfc9457: false
+content_type: application/json; charset=utf-8
+envelope:
+  error: '{"error": "<human message>"}'
+  success: '{"e":"success"}'
+http_status: >-
+  Every observed response — success, missing parameters, and an unhandled server
+  exception — returned HTTP 200. There is no status-code signal to branch on and
+  no error code, type URI, or machine-readable identifier in the body; the only
+  discriminator is a free-text English message.
+problem_types:
+  - id: missing-required-data
+    message: Missing required data
+    observed_on:
+      - {endpoint: POST /w/get-embed, http_status: 200}
+    meaning: >-
+      Required embed parameters (public key `k` and embed id `eid` at minimum)
+      were absent from the request body.
+    remediation: >-
+      Send the embed's public key and embed id as published in the host page's
+      StoryTap embed snippet.
+    method: probed
+  - id: unhandled-server-exception
+    message: "Cannot read properties of undefined (reading 'indexOf')"
+    observed_on:
+      - {endpoint: POST /w/answer, http_status: 200}
+    meaning: >-
+      A raw Node.js TypeError from the server implementation is returned to the
+      caller in the `error` field when required fields are absent. This is an
+      unhandled exception leaking through the error envelope, not a defined
+      error type.
+    remediation: >-
+      Not actionable by a caller. Provider-side: validate input and return a
+      typed error instead of the runtime exception string.
+    method: probed
+    note: >-
+      Recorded because it is the actual observed behavior. It is a defect
+      signal, not a documented contract.
+gaps:
+  - No error codes or error identifiers of any kind.
+  - No documented error reference page anywhere on storytap.com or app.storytap.com.
+  - No HTTP status differentiation (200 for success and for failure).
+  - No RFC 9457 / application/problem+json support.
+  - Errors for the authenticated platform API (campaigns, brands, invites) are not publicly observable.
+x-evidence:
+  fetched: '2026-08-13'
+  probes:
+    - {url: 'https://api.storytap.com/w/get-embed', method: POST, status: 200}
+    - {url: 'https://api.storytap.com/w/answer', method: POST, status: 200}
+    - {url: 'https://api.storytap.com/w/question', method: POST, status: 200}

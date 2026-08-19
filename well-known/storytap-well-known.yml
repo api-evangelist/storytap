@@ -1,6 +1,7 @@
-generated: '2026-07-21'
-method: searched
-source: live probes of /.well-known/ on StoryTap hosts
+generated: '2026-08-13'
+method: probed
+source: live probes of /.well-known/ on every StoryTap host, 2026-08-13
+result: no_documents_served
 hosts:
 - host: https://storytap.com
   documents:
@@ -10,9 +11,15 @@ hosts:
     status: 404
   - path: /.well-known/oauth-authorization-server
     status: 404
+  - path: /.well-known/oauth-protected-resource
+    status: 404
   - path: /.well-known/api-catalog
     status: 404
   - path: /.well-known/ai-plugin.json
+    status: 404
+  - path: /.well-known/agent-card.json
+    status: 404
+  - path: /.well-known/agent.json
     status: 404
 - host: https://app.storytap.com
   documents:
@@ -22,11 +29,66 @@ hosts:
     status: 404
   - path: /.well-known/oauth-authorization-server
     status: 404
+  - path: /.well-known/oauth-protected-resource
+    status: 404
   - path: /.well-known/api-catalog
     status: 404
   - path: /.well-known/ai-plugin.json
     status: 404
+  - path: /.well-known/agent-card.json
+    status: 404
+  - path: /.well-known/agent.json
+    status: 404
+- host: https://api.storytap.com
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+  - path: /.well-known/oauth-protected-resource
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+  - path: /.well-known/agent-card.json
+    status: 404
+  - path: /.well-known/agent.json
+    status: 404
+non_well_known_root_documents:
+- path: /llms.txt
+  host: https://storytap.com
+  status: 200
+  content_type: text/plain
+  file: ../llms/storytap-llms.txt
+  note: Saved verbatim. Yoast-generated marketing index, not a developer document.
+- path: /robots.txt
+  host: https://storytap.com
+  status: 200
+  note: 'Crawl-delay: 10; Disallow empty (nothing disallowed); sitemap declared.'
+- path: /llms.txt
+  host: https://app.storytap.com
+  status: 404
+- path: /llms.txt
+  host: https://api.storytap.com
+  status: 404
 notes: >-
-  No /.well-known/ discovery documents are published on either the marketing
-  (storytap.com) or application (app.storytap.com) host. Absence is a valid
-  recorded result; no raw files were saved.
+  No /.well-known/ discovery document of any kind is served on the marketing host
+  (storytap.com), the application host (app.storytap.com) or the API host
+  (api.storytap.com). Every path 404s. NO WellKnown / SecurityTxt pointer is
+  emitted in apis.yml — this file records an absence, not a presence. Worth
+  noting for whoever reads this next: storytap.com resolves *.storytap.com by
+  wildcard and every unknown subdomain (api, docs, developer, developers, and a
+  random control string) redirects to https://app.storytap.com/login with HTTP
+  200, so subdomain existence cannot be inferred from a 200 on this domain.
+  api.storytap.com is nevertheless real — it serves the JSON widget API under
+  /w/* (see components/storytap-components.yml).
+x-evidence:
+  fetched: '2026-08-13'
+  wildcard_control_probe:
+    url: https://nonexistent-xyz123.storytap.com/
+    status: 200
+    final_url: https://app.storytap.com/login
+    note: Control probe proving the wildcard catch-all; treat bare subdomain 200s as meaningless here.

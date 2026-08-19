@@ -1,0 +1,105 @@
+generated: '2026-08-13'
+method: probed
+source: https://cdn1aws.storytap.com/storytap-videos-2.js
+description: >-
+  StoryTap's client-side embeddable video surface. Brands embed StoryTap
+  testimonial/UGC video galleries, Q&A ("Video FAQ") answer units and the
+  StoryTap player on their own pages by loading a single first-party loader
+  script from StoryTap's CDN. The script mounts the widget in the host page and
+  talks to StoryTap's production API host (api.storytap.com) over POST JSON,
+  authenticated by a public per-embed key. This is distinct from any
+  server-side SDK — StoryTap publishes no package-registry client libraries
+  (see packages/storytap-packages.yml).
+docs:
+  - https://storytap.com/video-player-and-geo/
+  - https://storytap.com/ugc-video-platform/
+
+libraries:
+  - name: storytap-videos-2.js
+    url: https://cdn1aws.storytap.com/storytap-videos-2.js
+    registry: cdn
+    version: null
+    published: null
+    http_status: 200
+    content_type: application/javascript
+    bytes: 227682
+    official: true
+    note: >-
+      Unpinned CDN distribution — the URL carries no version segment or hash and
+      floats to whatever StoryTap publishes, so a consumer (and this pipeline)
+      cannot tell which build they are getting. The "-2" is a generation marker,
+      not a semantic version. No jsDelivr/unpkg/npm mirror exists to read a
+      version from. Recorded as checked-and-unversionable rather than absent.
+
+families:
+  video_widgets:
+    description: >-
+      Embedded StoryTap video units rendered into a host page. The loader reads
+      per-embed configuration (embed id, public key, language, filters,
+      store/brand id) and requests the rendered embed payload from the API.
+    components:
+      - name: Video gallery / wall embed
+        note: Renders a set of StoryTap videos returned by /w/get-embed; supports filters and an "x" continuation cursor for a "More" page.
+      - name: Q&A / Video FAQ embed
+        note: Question-and-answer video unit; visitor questions POST to /w/question and single answers load from /w/answer. Also marketed standalone as Video FAQ (videofaq.com redirects to storytap.com, HTTP 200).
+      - name: Video feedback control
+        note: Viewer feedback on an individual video POSTs to /w/v-feedback.
+
+runtime_api:
+  note: >-
+    NOT a documented developer API. These endpoints were read out of StoryTap's
+    own public embed script and confirmed live by probing them with an empty
+    JSON body; they are the transport the embeddable components use. StoryTap
+    publishes no reference, no OpenAPI and no auth documentation for them.
+  host: api.storytap.com
+  staging_host: dev.app.storytap.com
+  transport: HTTPS POST, Content-Type application/json;charset=UTF-8, XMLHttpRequest with responseType json
+  credential: >-
+    Public per-embed key sent in the request body as `k` (or `key`), alongside
+    an embed id `eid`. Origin and source page URL are added by the loader.
+  endpoints:
+    - path: /w/get-embed
+      method: POST
+      purpose: Fetch the rendered embed configuration and its video/Q&A payload.
+      observed_params: [k, eid, storeId, ua, l, id, x, d, f, ovr, origin, source]
+      probe: {status: 200, body: '{"error":"Missing required data"}'}
+    - path: /w/answer
+      method: POST
+      purpose: Load a single video answer for a Q&A unit.
+      observed_params: [d, id, aid, eid, session, k, l, origin, source]
+      probe: {status: 200, body: '{"error":"Cannot read properties of undefined (reading ''indexOf'')"}'}
+    - path: /w/question
+      method: POST
+      purpose: Submit a visitor question against an embed.
+      observed_params: [q, t, id, eid, k, d, session, n, e, l, origin, source]
+      probe: {status: 200, body: '{"e":"success"}'}
+    - path: /w/v-feedback
+      method: POST
+      purpose: Submit viewer feedback on a video.
+      observed_params: [eid, k, d, session, origin, source]
+      probe: {status: 200}
+    - path: /w/event-queue
+      method: POST
+      purpose: Batched client analytics/event beacon, flushed every 3 seconds.
+      observed_params: [eid, id, d, key, session, queue, origin, source]
+      probe: {status: 200}
+
+host_platform_surfaces:
+  - name: Shopify
+    evidence: >-
+      api.storytap.com returns `frame-ancestors *.myshopify.com admin.shopify.com
+      *.storytap.com`, so StoryTap embeds are explicitly framed inside Shopify
+      storefronts and the Shopify admin.
+  - name: Intercom / Zapier / Stripe / PostHog / New Relic / Mapbox / video.js
+    evidence: >-
+      Named in the Content-Security-Policy-Report-Only header served by
+      api.storytap.com — third-party runtime dependencies of the StoryTap app,
+      recorded as observed fact, not as StoryTap products.
+
+x-evidence:
+  fetched: '2026-08-13'
+  probes:
+    - {url: 'https://cdn1aws.storytap.com/storytap-videos-2.js', status: 200}
+    - {url: 'https://api.storytap.com/w/get-embed', status: 200, method: POST}
+    - {url: 'https://api.storytap.com/w/question', status: 200, method: POST}
+    - {url: 'https://videofaq.com/', status: 200, note: redirects to https://storytap.com/}

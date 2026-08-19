@@ -1,0 +1,31 @@
+generated: '2026-08-13'
+method: probed
+source: https://storytap.com/pricing/
+plan_count: 0
+currency: null
+plans: []
+note: >-
+  StoryTap publishes NO pricing. https://storytap.com/pricing/ returns HTTP 200
+  but the page body is a WordPress password gate — "This content is
+  password-protected. To view it, please enter the password below." — so no tier,
+  price, quota, seat count or overage is publicly readable. The page is still
+  linked from the site footer and product nav, and is no longer listed in
+  https://storytap.com/page-sitemap.xml. Self-serve signup is also gone:
+  https://app.storytap.com/signup redirects to
+  https://app.storytap.com/oops?msg=no-brand (signup is brand-scoped and has no
+  public entry point), and /register and /free-trial both 404. The only public
+  route to a price is https://storytap.com/demo/ (book a demo) or
+  https://storytap.com/contact/. API access and advanced webhooks are positioned
+  as Enterprise-plan features on
+  https://storytap.com/enterprise-video-solution/, with no price attached.
+api_access_tier: >-
+  Enterprise only (vendor positioning; no price, quota or rate allowance published).
+x-evidence:
+  fetched: '2026-08-13'
+  probes:
+    - {url: 'https://storytap.com/pricing/', status: 200, note: 'HTTP 200 but body is a WordPress password gate — no pricing content'}
+    - {url: 'https://app.storytap.com/signup', status: 200, note: 'redirects to https://app.storytap.com/oops?msg=no-brand'}
+    - {url: 'https://app.storytap.com/register', status: 404}
+    - {url: 'https://app.storytap.com/free-trial', status: 404}
+    - {url: 'https://storytap.com/enterprise-video-solution/', status: 200}
+    - {url: 'https://storytap.com/demo/', status: 200}

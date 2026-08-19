@@ -1,0 +1,84 @@
+generated: '2026-08-13'
+method: derived
+source: >-
+  integrations/storytap-integrations.yml (StoryTap's own Zapier app,
+  StoryTapCLIAPI@1.6.1) and components/storytap-components.yml (endpoints read
+  from StoryTap's public embed loader and probed live)
+status: candidate
+summary: >-
+  StoryTap publishes NO Model Context Protocol server — no hosted endpoint, no
+  stdio package, no registry listing. https://api.storytap.com/mcp returns 404.
+  The candidate tool set below is DERIVED from operations StoryTap has itself
+  published (the Zapier app) or that are observable on its live widget API. It is
+  a proposal for what an agent surface could bind to; it is NOT shipped by
+  StoryTap and no endpoint is implied.
+server: null
+transport: null
+auth:
+  type: unknown
+  note: >-
+    The widget API takes a public per-embed key in the request body. The
+    authenticated platform API behind the Zapier app has no publicly documented
+    auth scheme.
+deployment:
+  mode: none
+  endpoint: null
+  install: null
+  package: null
+  auth: unknown
+  verified: searched
+  checked: '2026-08-13'
+  source: >-
+    Probed https://api.storytap.com/mcp (POST tools/list -> HTTP 404) and
+    searched the web, npm and StoryTap's own site for an MCP server. Nothing.
+candidate_tools:
+  - name: list_campaigns
+    maps_to: 'Zapier search: get_campaigns (Get Campaigns)'
+    description: List the email campaigns in a StoryTap account.
+    confidence: medium
+    note: REST path and payload not published; named operation only.
+  - name: list_parent_brands
+    maps_to: 'Zapier search: get_parent_brand (Get Parent Brands)'
+    description: List parent brands in a StoryTap account.
+    confidence: medium
+  - name: list_co_brands
+    maps_to: 'Zapier search: co_brand (Get Co-Brands)'
+    description: List co-brands under a parent brand.
+    confidence: medium
+  - name: add_invite
+    maps_to: 'Zapier action: add_invite (Add Invite)'
+    description: >-
+      Add a person to a StoryTap email campaign invite list
+      (campaign_id, name, email, optional product_skus and order_id).
+    confidence: high
+    note: Input fields are exactly as StoryTap published them on the Zapier listing.
+  - name: subscribe_events
+    maps_to: 'Zapier trigger: new_event (New Event, hook)'
+    description: >-
+      Subscribe to StoryTap events, optionally filtered by parent brand and
+      co-brand. Event names are not publicly enumerable.
+    confidence: medium
+  - name: get_embed
+    maps_to: POST https://api.storytap.com/w/get-embed
+    description: >-
+      Fetch a public embed's configuration and its video/Q&A payload by embed id
+      and public key. Probed live, HTTP 200.
+    confidence: high
+  - name: get_answer
+    maps_to: POST https://api.storytap.com/w/answer
+    description: Fetch a single video answer for a Q&A embed.
+    confidence: high
+  - name: ask_question
+    maps_to: POST https://api.storytap.com/w/question
+    description: Submit a visitor question against an embed.
+    confidence: high
+tool_crosswalk: null
+tool_crosswalk_note: >-
+  No crosswalk artifact is emitted: a crosswalk binds MCP tools to OpenAPI
+  operationIds, and StoryTap publishes neither an MCP server nor an OpenAPI, so
+  there is nothing on either side to bind.
+x-evidence:
+  fetched: '2026-08-13'
+  probes:
+    - {url: 'https://api.storytap.com/mcp', method: POST, status: 404, body: '{"status":404,"message":"Sorry, we can''t find that page."}'}
+    - {url: 'https://zapier.com/apps/storytap/integrations', status: 200}

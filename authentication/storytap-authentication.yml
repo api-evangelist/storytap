@@ -1,0 +1,61 @@
+generated: '2026-08-13'
+method: probed
+source: >-
+  Request construction read from StoryTap's public embed loader
+  https://cdn1aws.storytap.com/storytap-videos-2.js and confirmed against live
+  responses from https://api.storytap.com/w/*. derive-authentication.py produced
+  nothing because StoryTap publishes no OpenAPI to derive securitySchemes from.
+docs: null
+docs_note: StoryTap publishes no authentication documentation on any host.
+summary: >-
+  The only StoryTap API surface reachable without credentials authenticates with
+  a PUBLIC per-embed key carried in the JSON request body — not a header, not a
+  bearer token, and not a secret. The authenticated Enterprise platform API has
+  no publicly documented authentication scheme at all.
+schemes:
+  - id: embed-public-key
+    type: apiKey
+    in: body
+    name: k
+    aliases: [key]
+    companion_parameters:
+      - {name: eid, meaning: embed id — identifies which embed/brand the request is for}
+      - {name: storeId, meaning: optional store scope}
+      - {name: origin, meaning: window.location.hostname, added by the loader}
+      - {name: source, meaning: full page URL, added by the loader}
+    applies_to:
+      - POST https://api.storytap.com/w/get-embed
+      - POST https://api.storytap.com/w/answer
+      - POST https://api.storytap.com/w/question
+      - POST https://api.storytap.com/w/v-feedback
+      - POST https://api.storytap.com/w/event-queue
+    secrecy: public
+    note: >-
+      The key is published in the host page's embed markup, so any site visitor
+      can read it. It scopes a request to a brand's embed rather than
+      authenticating a principal. CORS is fully open
+      (access-control-allow-origin: *), so the practical control is the
+      origin/source values the loader supplies, which a caller can set freely.
+      Treat this as identification, not authentication.
+  - id: enterprise-platform-api
+    type: unknown
+    in: unknown
+    applies_to: 'StoryTap Enterprise REST API (campaigns, brands, invites, events)'
+    evidence: >-
+      Existence is established by StoryTap's own Zapier app,
+      StoryTapCLIAPI@1.6.1 (https://zapier.com/apps/storytap/integrations), which
+      necessarily authenticates to a StoryTap account. The listing does not
+      disclose the auth type, and StoryTap publishes no auth documentation, so
+      nothing further is asserted here.
+negative_findings:
+  - {check: OAuth 2.0 authorization server metadata, url: 'https://api.storytap.com/.well-known/oauth-authorization-server', status: 404}
+  - {check: OAuth 2.0 protected resource metadata, url: 'https://api.storytap.com/.well-known/oauth-protected-resource', status: 404}
+  - {check: OpenID Connect discovery, url: 'https://app.storytap.com/.well-known/openid-configuration', status: 404}
+  - {check: Authorization header accepted, result: 'not used by the client and not required by the server'}
+  - {check: mTLS, result: not offered}
+oauth_scopes: none
+x-evidence:
+  fetched: '2026-08-13'
+  probes:
+    - {url: 'https://api.storytap.com/w/get-embed', method: POST, status: 200, body: '{"error":"Missing required data"}'}
+    - {url: 'https://api.storytap.com/w/get-embed', method: OPTIONS, status: 200, note: 'access-control-allow-origin: *; allow-methods GET,POST'}

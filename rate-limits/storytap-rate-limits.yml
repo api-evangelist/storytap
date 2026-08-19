@@ -1,0 +1,49 @@
+generated: '2026-08-13'
+method: probed
+source: >-
+  Response headers observed on live POST/OPTIONS requests to
+  https://api.storytap.com/w/* on 2026-08-13, plus a search of storytap.com for
+  any published limits.
+limit_count: 0
+limits: []
+headers:
+  rate_limit_headers_returned: false
+  observed_response_headers:
+    - server
+    - content-type
+    - content-length
+    - content-security-policy-report-only
+    - cross-origin-opener-policy
+    - cross-origin-resource-policy
+    - origin-agent-cluster
+    - referrer-policy
+    - strict-transport-security
+    - x-content-type-options
+    - x-dns-prefetch-control
+    - x-download-options
+    - x-frame-options
+    - x-permitted-cross-domain-policies
+    - x-xss-protection
+    - access-control-allow-origin
+    - etag
+  absent:
+    - RateLimit / RateLimit-Policy (RFC 9239 draft style)
+    - X-RateLimit-Limit / X-RateLimit-Remaining / X-RateLimit-Reset
+    - Retry-After
+  exhaustion_status_code: unknown
+note: >-
+  StoryTap documents no rate limits anywhere — there is no developer portal, no
+  API reference and no pricing page readable to attach quotas to (see
+  plans/storytap-plans-pricing.yml, which is password-gated). The only reachable
+  API surface, the widget API at api.storytap.com, returns no rate-limit
+  signalling headers of any kind, so an integrator or agent has no runtime way to
+  learn its budget or back off correctly. No limits were induced: this pipeline
+  does not probe for throttling by flooding a provider. An honest zero.
+remedy: >-
+  Publish per-key limits and emit RateLimit-* (or X-RateLimit-*) plus Retry-After
+  with a 429 on exhaustion, so callers can pace themselves without guessing.
+x-evidence:
+  fetched: '2026-08-13'
+  probes:
+    - {url: 'https://api.storytap.com/w/get-embed', method: POST, status: 200}
+    - {url: 'https://api.storytap.com/w/get-embed', method: OPTIONS, status: 200}

@@ -1,0 +1,148 @@
+generated: '2026-08-13'
+method: probed
+source: >-
+  Live probes of https://api.storytap.com/w/* (response headers + bodies) and
+  the request construction read from StoryTap's public embed loader
+  https://cdn1aws.storytap.com/storytap-videos-2.js
+scope: >-
+  Cross-cutting runtime semantics of the only StoryTap API surface reachable
+  without credentials — the widget/embed API at api.storytap.com. StoryTap
+  publishes no developer documentation, no reference and no machine-readable
+  spec, so every statement below is either observed on the wire or read out of
+  StoryTap's own shipped client. Nothing here is inferred from prose.
+caveat: >-
+  These conventions describe an UNDOCUMENTED surface. They are a faithful record
+  of observed behavior, not a contract StoryTap has offered, and StoryTap may
+  change any of it without notice.
+
+environments:
+  production:
+    host: api.storytap.com
+    note: Default host hard-coded in the embed loader.
+  staging:
+    host: dev.app.storytap.com
+    note: >-
+      Selected by the loader when the embed config sets `stage: true`. Live and
+      answering the same /w/* routes (probed 200), application root is
+      login-gated. Not a documented public sandbox.
+
+authentication:
+  style: public embed key in request body
+  parameter: k (also sent as `key` by the analytics beacon)
+  companion_identifier: eid (embed id)
+  headers: none — no Authorization header, no API-key header
+  note: >-
+    The key is public by construction: it ships inside the host page's markup so
+    any visitor can read it. It scopes a request to a brand's embed; it is not a
+    secret credential. The authenticated StoryTap platform API (campaigns,
+    brands, invites — see integrations/storytap-integrations.yml) is a separate,
+    undocumented surface whose auth scheme is not publicly stated.
+
+transport:
+  protocol: HTTP/2 over TLS
+  method: POST for every operation (GET on the same paths returns the app 404 shell)
+  request_content_type: application/json;charset=UTF-8
+  response_content_type: application/json; charset=utf-8
+  cors:
+    access_control_allow_origin: '*'
+    access_control_allow_methods: GET,POST
+    access_control_max_age: 300
+    note: Fully open CORS — the widget is designed to be called from any brand's domain.
+  client_context_fields:
+    - {field: origin, value: window.location.hostname}
+    - {field: source, value: window.location.origin + pathname}
+    - {field: session, value: client-generated session id}
+    - {field: ua, value: navigator.userAgent}
+  note: >-
+    The loader adds origin/source on every call, so the effective access control
+    is referrer/embed-scoping rather than a bearer credential.
+
+error_envelope:
+  style: proprietary JSON body, HTTP status always 200
+  shape: '{"error": "<message>"}'
+  success_shape: '{"e":"success"}'
+  http_status_semantics: >-
+    NOT USED. A missing-parameter request returns HTTP 200 with an error body,
+    and an internal failure also returns HTTP 200 — the observed
+    "Cannot read properties of undefined (reading 'indexOf')" is a raw Node
+    TypeError message surfaced to the caller. A client cannot branch on status
+    code; it must inspect the body. Catalogued in
+    errors/storytap-problem-types.yml.
+  rfc9457: false
+  problem_json: false
+
+pagination:
+  style: opaque continuation token
+  parameter: x
+  mechanism: >-
+    /w/get-embed responses carry a continuation value that the loader stores on
+    the "More" control as an `x` attribute and replays on the next request. No
+    page numbers, no limit/offset, no documented page size.
+  response_fields_observed: [videos, qa, filter, e]
+
+filtering:
+  parameter: f
+  mechanism: Comma-joined filter list sent as `f`, with `fc` marking a filter click.
+  localization: '`l` selects the embed language.'
+
+idempotency:
+  supported: false
+  evidence: >-
+    No Idempotency-Key header is sent by the client, none is accepted or echoed
+    by the server, and no idempotency semantics are documented anywhere. The
+    write-shaped calls (/w/question, /w/v-feedback) are fire-and-forget.
+
+request_tracing:
+  request_id_header: none
+  evidence: >-
+    Response headers carry no x-request-id / x-correlation-id / traceparent.
+    Only an ETag (W/"...") is returned. There is no documented support path that
+    accepts a request id.
+
+versioning:
+  in_url: false
+  in_header: false
+  scheme: none observed
+  note: >-
+    Paths are unversioned (/w/<operation>). The only version-like signal on any
+    StoryTap surface is the asset generation marker in the loader filename
+    ("storytap-videos-2.js") and the Zapier CLI app build "StoryTapCLIAPI@1.6.1".
+    See lifecycle/storytap-lifecycle.yml.
+
+rate_limiting:
+  signalled: false
+  note: >-
+    No RateLimit-*, X-RateLimit-* or Retry-After headers on any observed
+    response. See rate-limits/storytap-rate-limits.yml.
+
+transport_security:
+  hsts: 'max-age=31536000; includeSubDomains'
+  csp: Content-Security-Policy-Report-Only (report-only, not enforcing)
+  x_content_type_options: nosniff
+  x_frame_options: SAMEORIGIN
+  frame_ancestors: '*.myshopify.com admin.shopify.com *.storytap.com'
+  referrer_policy: strict-origin-when-cross-origin
+  cross_origin_opener_policy: same-origin
+  cross_origin_resource_policy: cross-origin
+  server: nginx
+  note: >-
+    Notably stronger than the marketing host — storytap.com serves no HSTS
+    (see security/storytap-domain-security.yml) while api.storytap.com does.
+
+cross_references:
+  errors: errors/storytap-problem-types.yml
+  rate_limits: rate-limits/storytap-rate-limits.yml
+  components: components/storytap-components.yml
+  lifecycle: lifecycle/storytap-lifecycle.yml
+  conformance: conformance/storytap-conformance.yml
+
+x-evidence:
+  fetched: '2026-08-13'
+  probes:
+    - {url: 'https://api.storytap.com/w/get-embed', method: POST, status: 200}
+    - {url: 'https://api.storytap.com/w/answer', method: POST, status: 200}
+    - {url: 'https://api.storytap.com/w/question', method: POST, status: 200}
+    - {url: 'https://api.storytap.com/w/event-queue', method: POST, status: 200}
+    - {url: 'https://api.storytap.com/w/get-embed', method: OPTIONS, status: 200}
+    - {url: 'https://api.storytap.com/w/get-embed', method: GET, status: 404}
+    - {url: 'https://dev.app.storytap.com/w/get-embed', method: POST, status: 200}

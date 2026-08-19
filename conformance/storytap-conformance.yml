@@ -1,0 +1,153 @@
+generated: '2026-08-13'
+method: searched
+source: >-
+  https://storytap.com/ (published compliance claim), https://storytap.com/terms/,
+  https://storytap.com/responsible-disclosure-policy/, and live probes of
+  https://api.storytap.com/w/*
+summary: >-
+  StoryTap publishes one named certification (SOC 2 Type II) on its homepage and
+  runs a responsible-disclosure program. Against API-level and agent-level
+  standards it conforms to essentially nothing: no OpenAPI, no AsyncAPI, no
+  OAuth/OIDC, no RFC 9457, no /.well-known documents, no agent card, no MCP.
+conformance:
+  - id: soc2-type-ii
+    name: SOC 2 Type II
+    conforms: true
+    evidence:
+      source: https://storytap.com/
+      quote: >-
+        Innovating since 2019 with patents extending through 2026, StoryTap
+        combines protected technology with SOC 2 Type II certification to deliver
+        a secure, scalable platform you can trust.
+      kind: vendor-published claim on the company homepage
+    note: >-
+      A self-published claim, not a verified report. No trust center, no audit
+      period, no auditor named, and no report request path is published. The
+      claim is recorded because StoryTap makes it publicly and specifically
+      (Type II, not merely "SOC 2 compliant").
+  - id: responsible-disclosure
+    name: Coordinated vulnerability disclosure
+    conforms: true
+    evidence:
+      source: https://storytap.com/responsible-disclosure-policy/
+      http_status: 200
+      contact: security@storytap.com
+    note: >-
+      Policy page is live and names a security contact and an acknowledgement
+      window. Not machine-discoverable — no /.well-known/security.txt is served
+      (see well-known/storytap-well-known.yml).
+  - id: rfc9116-security-txt
+    name: RFC 9116 security.txt
+    conforms: false
+    evidence:
+      probes:
+        - {url: 'https://storytap.com/.well-known/security.txt', status: 404}
+        - {url: 'https://app.storytap.com/.well-known/security.txt', status: 404}
+        - {url: 'https://api.storytap.com/.well-known/security.txt', status: 404}
+    note: A human disclosure policy exists; the machine-readable pointer to it does not.
+  - id: openapi
+    name: OpenAPI Specification
+    conforms: false
+    evidence:
+      probes:
+        - {url: 'https://storytap.com/openapi.json', status: 404}
+        - {url: 'https://app.storytap.com/openapi.json', status: 404}
+        - {url: 'https://api.storytap.com/openapi.json', status: 404}
+        - {url: 'https://api.storytap.com/swagger.json', status: 404}
+        - {url: 'https://api.storytap.com/api-docs', status: 404}
+  - id: asyncapi
+    name: AsyncAPI
+    conforms: false
+    evidence:
+      probes:
+        - {url: 'https://api.storytap.com/asyncapi.yaml', status: 404}
+        - {url: 'https://storytap.com/asyncapi.yaml', status: 404}
+    note: >-
+      An event surface demonstrably exists (see asyncapi/storytap-webhooks.yml)
+      but no AsyncAPI document describes it.
+  - id: rfc9457
+    name: RFC 9457 Problem Details for HTTP APIs
+    conforms: false
+    evidence:
+      observed: '{"error":"Missing required data"} returned as application/json with HTTP 200'
+      probe: {url: 'https://api.storytap.com/w/get-embed', method: POST, status: 200}
+    note: Proprietary error envelope; no application/problem+json.
+  - id: http-status-semantics
+    name: Meaningful HTTP status codes
+    conforms: false
+    evidence:
+      observed: >-
+        HTTP 200 returned for success, for missing required parameters, and for
+        an unhandled server exception on api.storytap.com/w/*.
+  - id: oauth2
+    name: OAuth 2.0
+    conforms: false
+    evidence:
+      probes:
+        - {url: 'https://api.storytap.com/.well-known/oauth-authorization-server', status: 404}
+        - {url: 'https://app.storytap.com/.well-known/oauth-authorization-server', status: 404}
+        - {url: 'https://api.storytap.com/.well-known/oauth-protected-resource', status: 404}
+    note: >-
+      The public widget API authenticates with a public per-embed key in the
+      request body. No OAuth is published for the Enterprise platform API.
+  - id: oidc
+    name: OpenID Connect
+    conforms: false
+    evidence:
+      probes:
+        - {url: 'https://app.storytap.com/.well-known/openid-configuration', status: 404}
+        - {url: 'https://api.storytap.com/.well-known/openid-configuration', status: 404}
+  - id: rfc9727-api-catalog
+    name: RFC 9727 /.well-known/api-catalog
+    conforms: false
+    evidence:
+      probes:
+        - {url: 'https://storytap.com/.well-known/api-catalog', status: 404}
+        - {url: 'https://api.storytap.com/.well-known/api-catalog', status: 404}
+  - id: a2a-agent-card
+    name: A2A Agent Card
+    conforms: false
+    evidence:
+      probes:
+        - {url: 'https://storytap.com/.well-known/agent-card.json', status: 404}
+        - {url: 'https://app.storytap.com/.well-known/agent-card.json', status: 404}
+        - {url: 'https://api.storytap.com/.well-known/agent-card.json', status: 404}
+        - {url: 'https://api.storytap.com/.well-known/agent.json', status: 404}
+  - id: mcp
+    name: Model Context Protocol
+    conforms: false
+    evidence:
+      probes:
+        - {url: 'https://api.storytap.com/mcp', method: POST, status: 404}
+      search: No hosted or stdio MCP server published by StoryTap was found.
+  - id: llms-txt
+    name: llms.txt
+    conforms: true
+    evidence:
+      probe: {url: 'https://storytap.com/llms.txt', status: 200, content_type: text/plain}
+    note: >-
+      Served at the marketing root and generated by Yoast SEO v27.4 — a marketing
+      site index (pages, posts, case studies, categories), not a developer
+      surface. Saved verbatim to llms/storytap-llms.txt.
+  - id: idempotency
+    name: Idempotent write semantics
+    conforms: false
+    evidence: No Idempotency-Key accepted or documented on any StoryTap surface.
+  - id: rate-limit-headers
+    name: RateLimit header fields
+    conforms: false
+    evidence: No RateLimit-*, X-RateLimit-* or Retry-After headers observed on api.storytap.com.
+  - id: hsts
+    name: HTTP Strict Transport Security
+    conforms: partial
+    evidence:
+      api_host: 'api.storytap.com: strict-transport-security max-age=31536000; includeSubDomains'
+      marketing_host: 'storytap.com: no HSTS header (see security/storytap-domain-security.yml)'
+
+compliance_programs:
+  - {name: SOC 2 Type II, published: true, source: 'https://storytap.com/', verified_report: false}
+  - {name: Trust center, published: false, note: No trust center or security portal page exists on storytap.com.}
+  - {name: GDPR/CCPA, published: false, note: 'The privacy policy at https://storytap.com/terms/ describes retention and cross-border transfers out of Canada, but names no regulatory compliance program or certification.'}
+
+x-evidence:
+  fetched: '2026-08-13'

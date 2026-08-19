@@ -1,0 +1,61 @@
+generated: '2026-08-13'
+method: searched
+source: >-
+  https://zapier.com/apps/storytap/integrations (StoryTap's own Zapier app,
+  StoryTapCLIAPI@1.6.1) and the Integrations section of https://storytap.com/
+summary: >-
+  StoryTap ships an event/webhook surface, but publishes no event catalog and no
+  AsyncAPI. This artifact records what can be proven about it from StoryTap's own
+  public material, and is explicit about what cannot.
+asyncapi_published: false
+webhook_catalog_published: false
+webhooks_exist: true
+evidence_for_existence:
+  - source: https://storytap.com/
+    quote: 'Webhooks — Connect your system to StoryTap to create powerful automations.'
+    kind: integration tile on the vendor homepage
+  - source: https://zapier.com/apps/storytap/integrations
+    quote: 'New Event — Triggers when a specified event occurs within StoryTap.'
+    kind: >-
+      Zapier trigger published by StoryTap with isHook=true, i.e. a subscription
+      (push) trigger rather than polling — StoryTap calls out to the subscriber
+      when the event fires.
+  - source: https://storytap.com/enterprise-video-solution/
+    kind: >-
+      Enterprise plan positioning; API and "advanced webhooks" are described by
+      StoryTap as Enterprise-plan features. The page itself does not name the
+      API or the webhooks.
+
+subscription_model:
+  mechanism: >-
+    Subscribers select which StoryTap events they want. In the Zapier app this is
+    the required `events` field ("Select the StoryTap events that will trigger
+    this Zap"), optionally narrowed by `parent_brand` and `co_brand`.
+  filters: [parent_brand, co_brand]
+  delivery: push (hook)
+
+events: []
+events_note: >-
+  DELIBERATELY EMPTY. The event names live behind a dynamic dropdown that Zapier
+  populates from an authenticated StoryTap account, so they cannot be enumerated
+  without credentials, and StoryTap documents none of them publicly. Listing
+  plausible event names here would be fabrication. Enumerating them requires an
+  authenticated StoryTap tenant.
+
+gaps:
+  - No AsyncAPI document published anywhere on storytap.com, app.storytap.com or api.storytap.com.
+  - No public webhook reference: no event list, no payload schema, no signing/verification scheme, no retry or delivery-guarantee policy.
+  - No documented signature header, so a subscriber has no published way to verify authenticity.
+remedy: >-
+  Publish the event catalog and payload schemas at a public URL (an AsyncAPI
+  document, or at minimum a webhooks reference page), including the signing
+  scheme and retry policy. The events are already selectable inside the product;
+  only their documentation is missing.
+
+x-evidence:
+  fetched: '2026-08-13'
+  probes:
+    - {url: 'https://zapier.com/apps/storytap/integrations', status: 200}
+    - {url: 'https://storytap.com/', status: 200}
+    - {url: 'https://storytap.com/enterprise-video-solution/', status: 200}
+    - {url: 'https://api.storytap.com/asyncapi.yaml', status: 404}
