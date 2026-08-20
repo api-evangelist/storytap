@@ -40,6 +40,15 @@ tags:
 - Marketing
 - Reviews
 - Video Testimonials
+- Software-as-a-Service
+tags_raw:
+- Company
+- Video
+- Testimonials
+- User Generated Content
+- Marketing
+- Reviews
+- Video Testimonials
 - SaaS
 apis:
 - name: StoryTap Video Widget API
