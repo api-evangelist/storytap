@@ -83,6 +83,12 @@ apis:
   - User Generated Content
   - Testimonials
   - Widgets
+  - Embed
+  tags_raw:
+  - Video
+  - User Generated Content
+  - Testimonials
+  - Widgets
   - Embeds
   properties:
   - type: Components
